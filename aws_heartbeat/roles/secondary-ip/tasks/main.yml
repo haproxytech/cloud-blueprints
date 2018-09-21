@@ -1,0 +1,48 @@
+- name: install required Python modules
+  apt:
+    pkg:
+      - python-boto
+      - python-boto3
+    state: present
+
+- name: install boto3
+  apt:
+    pkg: python-boto3
+    state: present
+
+- name: gather HAPEE EC2 ENI details
+  ec2_eni_facts:
+    region: "{{ region | default('us-east-1') }}"
+    filters:
+      attachment.instance-id: "{{ ec2_id }}"
+  register: aws_ec2_eni_facts
+
+- name: add secondary IP address
+  ec2_eni:
+    region: "{{ region | default('us-east-1') }}"
+    eni_id: "{{ aws_ec2_eni_facts['network_interfaces'][0]['id'] }}"
+    subnet_id: "{{ aws_ec2_eni_facts['network_interfaces'][0]['subnet_id'] }}"
+    state: present
+    secondary_private_ip_address_count: 1
+
+- name: copy add_secondary_addrs.sh
+  copy:
+    src: add_secondary_addrs.sh
+    dest: /usr/local/sbin
+    mode: 0755
+    owner: root
+    group: root
+
+- name: copy Systemd secondary_address service
+  copy:
+    src: secondary_address.service
+    dest: /lib/systemd/system/secondary_address.service
+    owner: root
+    group: root
+
+- name: enable and restart secondary_address service
+  systemd:
+    name: secondary_address
+    daemon_reload: yes
+    state: started
+    enabled: yes

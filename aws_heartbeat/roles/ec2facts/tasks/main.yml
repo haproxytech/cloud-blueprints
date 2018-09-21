@@ -1,0 +1,13 @@
+- name: gather HAPEE EC2 ENI details
+  ec2_eni_facts:
+    region: "{{ region | default('us-east-1') }}"
+    filters:
+      attachment.instance-id: "{{ ec2_id }}"
+  register: aws_ec2_eni_facts
+
+- name: gather HAPEE EC2 EIP details
+  ec2_eip_facts:
+    region: "{{ region | default('us-east-1') }}"
+    filters:
+      instance-id: "{{ ec2_id }}"
+  register: aws_ec2_eip_facts

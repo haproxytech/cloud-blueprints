@@ -1,0 +1,11 @@
+[Unit]
+Description=Add secondary private IPs
+Wants=network-online.target
+After=network.target network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/add_secondary_addrs.sh
+
+[Install]
+WantedBy=multi-user.target

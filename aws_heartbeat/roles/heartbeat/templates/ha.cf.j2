@@ -1,0 +1,15 @@
+crm no
+keepalive 2
+deadtime 15
+initdead 60
+udpport 694
+{% for backend in groups['tag_Name_hapee_lb_node'] %}
+{% for addr in hostvars[backend]['aws_ec2_eni_facts']['network_interfaces'][0]['private_ip_addresses'] | map(attribute='private_ip_address') | list %}
+ucast eth0 {{ addr }}
+{% endfor %}
+{% endfor %}
+ping {{ ansible_default_ipv4.gateway }}
+auto_failback on
+{% for backend in groups['tag_Name_hapee_lb_node'] %}
+node {{ hostvars[backend]['ansible_hostname'] }}
+{% endfor %}

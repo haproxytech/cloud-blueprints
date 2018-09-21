@@ -1,0 +1,52 @@
+- name: install AWS CLI
+  apt:
+    pkg: awscli
+    state: present
+
+- name: register first EIP
+  set_fact:
+    first_eip: "{{ groups['tag_Name_hapee_lb_node'] | first }}"
+
+- name: register second EIP
+  set_fact:
+    second_eip: "{{ groups['tag_Name_hapee_lb_node'] | last }}"
+
+- name: install Heartbeat service
+  apt:
+    pkg: heartbeat
+    state: present
+
+- name: generate ha.cf configuration
+  template:
+    src: ha.cf.j2
+    dest: /etc/ha.d/ha.cf
+    mode: 0644
+
+- name: copy authkeys
+  copy:
+    src: authkeys
+    dest: /etc/ha.d
+    mode: 0600
+
+- name: generate haresources configuration
+  template:
+    src: haresources.j2
+    dest: /etc/ha.d/haresources
+    mode: 0644
+
+- name: generate updateEIP1 configuration
+  template:
+    src: updateEIP1.j2
+    dest: /etc/ha.d/resource.d/updateEIP1
+    mode: 0755
+
+- name: generate updateEIP2 configuration
+  template:
+    src: updateEIP2.j2
+    dest: /etc/ha.d/resource.d/updateEIP2
+    mode: 0755
+
+- name: restart Heartbeat service
+  systemd:
+    name: heartbeat
+    state: restarted

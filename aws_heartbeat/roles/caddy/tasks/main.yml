@@ -1,0 +1,63 @@
+- name: download and install binary
+  unarchive:
+    src: https://caddyserver.com/download/linux/amd64?license=personal&telemetry=off
+    dest: /usr/local/bin
+    mode: 0755
+    owner: root
+    group: root
+    remote_src: yes
+
+- name: set required capabilities
+  capabilities:
+    path: /usr/local/bin/caddy
+    capability: cap_net_bind_service+ep
+    state: present
+
+- name: create /etc/caddy directory
+  file:
+    path: /etc/caddy
+    state: directory
+    owner: root
+    group: "{{caddy_user}}"
+
+- name: copy Caddy configuration
+  copy:
+    src: Caddyfile
+    dest: /etc/caddy
+
+- name: create SSL directory
+  file:
+    path: /etc/ssl/caddy
+    state: directory
+    owner: "{{caddy_user}}"
+    group: root
+    mode: 0770
+
+- name: create default web directory
+  file:
+    path: /var/www
+    state: directory
+    owner: "{{caddy_user}}"
+    group: root
+    mode: 0770
+
+- name: copy index.html
+  copy:
+    src: index.html
+    dest: /var/www
+    owner: "{{caddy_user}}"
+    group: root
+
+- name: copy Systemd Caddy unit file
+  copy:
+    src: caddy.service
+    dest: /lib/systemd/system/caddy.service
+    owner: root
+    group: root
+
+- name: enable and restart Caddy service
+  systemd:
+    name: caddy
+    daemon_reload: yes
+    state: started
+    enabled: yes
