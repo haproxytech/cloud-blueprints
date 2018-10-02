@@ -23,9 +23,26 @@ Ansible roles in **site.yml** playbook are:
   - secondary-ip: ensures that each HAPEE instance is able to configure secondary private IP on boot, as that doesn't happen by default on Amazon EC2
   - ec2facts: gathers ENI and EIP facts for further use in Heartbeat EIP helper scripts
   - hapee-lb: auto-generates hapee-lb.cfg configuration file from a Jinja2 template and populates Web node backends' private IPs in backend server definition
-  - heartbeat: handles complete HA Heartbeat installation with all prerequisites and configuration (ha.cf, authkeys, haresources, updateEIP1 and updateEIP2 helper scripts) on both load-balancer nodes; note that helper scripts differ between load-balancer nodes
+  - heartbeat: handles complete HA Heartbeat installation with all prerequisites and configuration (ha.cf, authkeys, haresources, updateEIP1 and updateEIP2 resource agent scripts) on both load-balancer nodes; note that helper scripts differ between load-balancer nodes
 - configuring Web backend nodes:
   - caddy: handles installation and configuration of Caddy HTTP server
+
+Ansible 2.6+ is required and Python jmespath is also needed:
+
+```shell
+apt install python-pip
+pip install jmespath
+pip install git+https://github.com/ansible/ansible.git@devel
+```
+
+To run this demo:
+
+```shell
+terraform init
+terraform apply -auto-approve
+sleep 10
+ansible-playbook site.yml 
+```
 
 Real life situation would:
 
