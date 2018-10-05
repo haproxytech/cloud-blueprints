@@ -1,0 +1,32 @@
+---
+# https://coderwall.com/p/zemgia/install-node-on-ubuntu-using-ansible
+- name: add apt key for nodesource
+  apt_key: url=https://deb.nodesource.com/gpgkey/nodesource.gpg.key
+
+- name: add repo for nodesource
+  apt_repository:
+    repo: 'deb https://deb.nodesource.com/node_0.10 {{ ansible_distribution_release }} main' 
+    update_cache: yes
+
+- name: install nodejs
+  apt: name=nodejs
+
+- name: create default web directory
+  file:
+    path: /var/www
+    state: directory
+    owner: "ubuntu"
+    group: root
+    mode: 0770
+
+- name: copy index.js
+  copy:
+    src: index.js
+    dest: /var/www
+    owner: "ubuntu"
+    group: root
+
+- name: Start web app
+  async: 45
+  poll: 0
+  shell: nodejs /var/www/index.js &
