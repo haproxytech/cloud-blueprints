@@ -1,6 +1,6 @@
 # HAPEE HA active-active with Heartbeat
 
-This is a complete [Terraform](https://www.terraform.io/) + [Ansible](https://www.ansible.com/) HA stack for creating an active-active 2-node HAProxy Enterprise [HAPEE](https://www.haproxy.com/products/haproxy-enterprise-edition/) cluster on AWS. Stack has active EIP failover (EIP1 and EIP2) between HAPEE load-balancers with active failback and failforward through [Heartbeat HA](http://linux-ha.org/wiki/Heartbeat); and configurable number of Web backends in this case several [Caddy HTTP](https://caddyserver.com/) servers (typically 3 or more) serving demo page.
+This is a complete [Terraform](https://www.terraform.io/) + [Ansible](https://www.ansible.com/) HA stack for creating an active-active 2-node HAProxy Enterprise [HAPEE](https://www.haproxy.com/products/haproxy-enterprise-edition/) cluster on AWS. Stack has active EIP failover (EIP1 and EIP2) between HAPEE load-balancers with active failback and failforward through [Heartbeat HA](http://linux-ha.org/wiki/Heartbeat); and configurable number of Web backends in this case several NodeJS Web application servers (typically 3 or more) serving demo page.
 
 All servers are in a single AZ, HAPEEs are doing HTTP proxying towards backends and there is no ELB or ALB required. DNS entry for a domain label served from our cluster would have both EIPs as A record for that label to be able to serve from both EIPs in a round-robin fashion.
 
@@ -8,7 +8,7 @@ All servers are in a single AZ, HAPEEs are doing HTTP proxying towards backends 
 
 This stack consists of the following key resources:
 
-- configurable amount of Caddy Web servers, as per _web\_cluster\_size_ variable (default 3)
+- configurable amount of NodeJS Web servers, as per _web\_cluster\_size_ variable (default 3)
 - non-configurable amount of HAPEE load-balancers (default 2 and cannot be changed)
 
 Network-wise, stack uses CIDR **20.0.0.0/8** in a single VPC and a single AZ. Given the overall size of the whole example (Terraform code and Ansible playbook) network setup was intentionally simplified to increase overall readability.
@@ -25,7 +25,7 @@ Ansible roles in **site.yml** playbook are:
   - hapee-lb: auto-generates hapee-lb.cfg configuration file from a Jinja2 template and populates Web node backends' private IPs in backend server definition
   - heartbeat: handles complete HA Heartbeat installation with all prerequisites and configuration (ha.cf, authkeys, haresources, updateEIP1 and updateEIP2 resource agent scripts) on both load-balancer nodes; note that helper scripts differ between load-balancer nodes
 - configuring Web backend nodes:
-  - caddy: handles installation and configuration of Caddy HTTP server
+  - nodejs: handles installation and configuration of NodeJS Web server
 
 Ansible 2.6+ is required and Python jmespath is also needed:
 

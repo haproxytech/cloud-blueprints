@@ -2,7 +2,7 @@ const http = require("http")
 
 http.createServer(function (request, response) {
 
-    const content = `
+  const content = `
     <html>
       <head>
         <title>Hello World</title>
@@ -12,7 +12,7 @@ http.createServer(function (request, response) {
       </body>
     </html>`;
 
-    response.writeHead(200, {'Content-Type': 'text/html'});
+  response.writeHead(200, { 'Content-Type': 'text/html' });
 
-    response.end(content+'\n');
+  response.end(content + '\n');
 }).listen(80);
