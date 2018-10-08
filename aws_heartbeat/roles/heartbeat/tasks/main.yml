@@ -1,3 +1,6 @@
+- name: wait for automatic system updates
+  shell: while pgrep unattended; do sleep 5; done;
+  
 - name: install AWS CLI
   apt:
     pkg: awscli

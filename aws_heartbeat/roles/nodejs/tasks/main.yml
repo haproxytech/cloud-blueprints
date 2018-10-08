@@ -1,3 +1,6 @@
+- name: wait for automatic system updates
+  shell: while pgrep unattended; do sleep 5; done;
+  
 - name: add NodeSource repo key
   apt_key: url=https://deb.nodesource.com/gpgkey/nodesource.gpg.key
 
