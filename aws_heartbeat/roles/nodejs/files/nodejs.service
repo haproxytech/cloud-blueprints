@@ -1,0 +1,22 @@
+[Unit]
+Description=NodeJS Hello World server
+After=network-online.target
+Wants=network-online.target systemd-networkd-wait-online.service
+
+[Service]
+Type=simple
+User=www-data
+Group=www-data
+ExecStart=/usr/bin/node /var/www/index.js
+Restart=on-failure
+
+LimitNOFILE=1048576
+LimitNPROC=512
+
+PrivateTmp=true
+PrivateDevices=false
+ProtectHome=true
+ProtectSystem=full
+
+[Install]
+WantedBy=multi-user.target

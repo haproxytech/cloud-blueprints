@@ -1,18 +1,8 @@
 const http = require("http")
 
 http.createServer(function (request, response) {
-
-  const content = `
-    <html>
-      <head>
-        <title>Hello World</title>
-      </head>
-      <body>
-        <h1>Hello World!</h1>
-      </body>
-    </html>`;
-
-  response.writeHead(200, { 'Content-Type': 'text/html' });
-
-  response.end(content + '\n');
+  response.writeHead(200, { 'Content-Type': 'text/plain' });
+  response.end('Hello World!\n');
 }).listen(80);
+
+console.log("Hello World HTTP server ready on port 80.")

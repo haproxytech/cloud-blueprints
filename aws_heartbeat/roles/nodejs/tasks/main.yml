@@ -1,32 +1,47 @@
----
-# https://coderwall.com/p/zemgia/install-node-on-ubuntu-using-ansible
-- name: add apt key for nodesource
+- name: add NodeSource repo key
   apt_key: url=https://deb.nodesource.com/gpgkey/nodesource.gpg.key
 
-- name: add repo for nodesource
+- name: add NodeSource repo
   apt_repository:
-    repo: 'deb https://deb.nodesource.com/node_0.10 {{ ansible_distribution_release }} main' 
+    repo: 'deb https://deb.nodesource.com/node_10.x {{ ansible_distribution_release }} main' 
     update_cache: yes
 
-- name: install nodejs
-  apt: name=nodejs
+- name: install NodeJS
+  apt:
+    name: nodejs
+    state: latest
+
+- name: set required capabilities (bind on privileged ports)
+  capabilities:
+    path: /usr/bin/node
+    capability: cap_net_bind_service+ep
+    state: present
 
 - name: create default web directory
   file:
     path: /var/www
     state: directory
-    owner: "ubuntu"
-    group: root
-    mode: 0770
+    owner: root
+    group: www-data
+    mode: 0750
 
 - name: copy index.js
   copy:
     src: index.js
     dest: /var/www
-    owner: "ubuntu"
+    owner: root
     group: root
 
-- name: Start web app
-  async: 45
-  poll: 0
-  shell: nodejs /var/www/index.js &
+- name: copy NodeJS Systemd unit file
+  copy:
+    src: nodejs.service
+    dest: /lib/systemd/system/nodejs.service
+    owner: root
+    group: root
+
+- name: enable and restart NodeJS service
+  systemd:
+    name: nodejs
+    daemon_reload: yes
+    state: started
+    enabled: yes
