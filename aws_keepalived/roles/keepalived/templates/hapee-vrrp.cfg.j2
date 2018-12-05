@@ -1,0 +1,83 @@
+vrrp_script chk_sshd {
+        script "pkill -0 sshd"
+        interval 5
+        weight -4
+        fall 2
+        rise 1
+}
+
+vrrp_script chk_dhclient {
+        script "pkill -0 dhclient"
+        interval 5
+        weight -4
+        fall 2
+        rise 1
+}
+
+vrrp_script chk_lb {
+        script "pkill -0 hapee-lb"
+        interval 2
+        weight 6
+        fall 2
+        rise 1
+}
+
+vrrp_script chk_gw {
+        script "/usr/local/sbin/ping-vrrp-check.sh {{ self_gateway }}"
+        interval 3
+        weight 0
+        fall 2
+        rise 3
+}
+
+vrrp_instance vrrp_1 {
+        interface {{ keepalived_interface1 }}
+        virtual_router_id {{ keepalived_router_id1 }}
+        state {{ keepalived_role1 | upper }}
+        priority {{ keepalived_priority1 }}
+        
+        unicast_src_ip {{ self_ip_address  }}
+        unicast_peer {
+            {{ peer_ip_address }}
+        }
+
+        authentication {
+                auth_type PASS
+                auth_pass {{ keepalived_password1 }}
+        }
+        
+        track_script {
+                chk_gw
+                chk_dhclient
+                chk_sshd
+                chk_lb
+        }
+
+        notify_master /usr/local/sbin/update-EIP1.sh
+}
+
+vrrp_instance vrrp_2 {
+        interface {{ keepalived_interface2 }}
+        virtual_router_id {{ keepalived_router_id2 }}
+        state {{ keepalived_role2 | upper }}
+        priority {{ keepalived_priority2 }}
+        
+        unicast_src_ip {{ self_ip_address  }}
+        unicast_peer {
+            {{ peer_ip_address }}
+        }
+
+        authentication {
+                auth_type PASS
+                auth_pass {{ keepalived_password2 }}
+        }
+        
+        track_script {
+                chk_gw
+                chk_dhclient
+                chk_sshd
+                chk_lb
+        }
+
+        notify_master /usr/local/sbin/update-EIP2.sh
+}

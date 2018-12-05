@@ -4,7 +4,7 @@ This repository contains number of Amazon AWS, Google Cloud and Azure examples o
 
 Current contents are:
 
-- aws_elb: AWS Classic ELB Terraform HA stack (single zone)
-- aws_alb: AWS ALB Terraform HA stack (multiple zone)
-- aws_heartbeat: AWS HAPEE active-active with Heartbeat HA
-- aws_keepalived: AWS HAPEE active-active with Keepalived and VRRP
+- [aws_elb](aws_elb/): AWS Classic ELB Terraform HA stack (single zone)
+- [aws_alb](aws_alb/): AWS ALB Terraform HA stack (multiple zone)
+- [aws_heartbeat](aws_heartbeat): AWS HAPEE active-active with Heartbeat HA
+- [aws_keepalived](aws_keepalived/): AWS HAPEE active-active with Keepalived and VRRP

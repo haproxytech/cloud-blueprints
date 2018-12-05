@@ -1,0 +1,10 @@
+#!/bin/sh
+
+EIP="{{ first_eip }}" # EIP1
+ENI_ID="{{ aws_ec2_eni_facts['network_interfaces'][0]['id'] }}" # ENI local
+ALLOCATION_ID="{{ hostvars[first_eip]['aws_ec2_eip_facts']['addresses'][0]['allocation_id'] }}" # EIP1 ID
+PRIVATE_IP="{% if ansible_host == first_eip %}{{ ec2_private_ip_address }}{% else %}{{ aws_ec2_eni_facts['network_interfaces'][0]['private_ip_addresses'] | json_query("[?private_ip_address!='" + ec2_private_ip_address + "'].private_ip_address") | first }}{% endif %}"
+
+export AWS_DEFAULT_REGION="{{ ec2_region }}"
+
+timeout 60 aws ec2 associate-address --allow-reassociation --allocation-id "$ALLOCATION_ID" --network-interface-id "$ENI_ID" --private-ip-address "$PRIVATE_IP"

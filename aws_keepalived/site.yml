@@ -1,0 +1,32 @@
+---
+# Playbook is used to configure HAPEE LBs and Web nodes
+
+- name: require 2.6+ minimum Ansible version due to EC2 EIP facter
+  hosts: all
+  gather_facts: false
+  pre_tasks:
+    - name: check Ansible version
+      assert:
+        that: "ansible_version.full is version('2.6', '>=')"
+        msg: "This playbook requires at least 2.6 Ansible: https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#running-from-source"
+
+- name: configure HAPEE LB nodes
+  hosts: tag_Name_hapee_lb_node
+  become: true
+  roles:
+    - secondary-ip
+    - ec2facts
+    - hapee-lb
+    - keepalived
+  tags:
+    - lb
+
+- name: configure Web backend nodes
+  hosts: tag_Name_hapee_web_node
+  become: true
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+  roles:
+    - nodejs
+  tags:
+    - backend
