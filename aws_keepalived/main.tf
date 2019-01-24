@@ -123,7 +123,15 @@ resource "aws_security_group" "hapee_node_sg" {
 
   ingress {
     from_port   = 3
-    to_port     = 4
+    to_port     = 0
+    protocol    = "icmp"
+    cidr_blocks = ["0.0.0.0/0"]
+    self        = true
+  }
+
+  ingress {
+    from_port   = 8
+    to_port     = 0
     protocol    = "icmp"
     cidr_blocks = ["0.0.0.0/0"]
     self        = true
