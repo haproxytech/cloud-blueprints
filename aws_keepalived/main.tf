@@ -2,7 +2,7 @@ provider "aws" {
   region = "${var.aws_region}"
 }
 
-// Lookup latest HAPEE AWS AMI (1.8r1 at this moment)
+// Lookup latest HAPEE Ubuntu AMI (Ubuntu Bionic 18.04 + HAPEE 1.8r2 at this moment)
 data "aws_ami" "hapee_aws_amis" {
   most_recent = true
 
@@ -13,19 +13,19 @@ data "aws_ami" "hapee_aws_amis" {
 
   filter {
     name   = "name"
-    values = ["hapee-ubuntu-xenial-amd64-hvm-1.8*"]
+    values = ["hapee-ubuntu-bionic-amd64-hvm-1.8*"]
   }
 
   owners = ["aws-marketplace"]
 }
 
-// Lookup latest Ubuntu Xenial 16.04 AMI
+// Lookup latest Ubuntu Bionic 18.04 AMI
 data "aws_ami" "ubuntu_aws_amis" {
   most_recent = true
 
   filter {
     name   = "name"
-    values = ["ubuntu/images/hvm-ssd/ubuntu-xenial-16.04-amd64-server-*"]
+    values = ["ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server-*"]
   }
 
   owners = ["099720109477"]
@@ -293,6 +293,7 @@ resource "aws_instance" "hapee_node" {
     - systemctl stop apt-daily.service
     - systemctl kill --kill-who=all apt-daily.service
     - systemctl stop apt-daily.timer
+    - systemctl stop apt-daily-upgrade.timer
   EOF
 
   tags {
@@ -303,6 +304,6 @@ resource "aws_instance" "hapee_node" {
 // EIP allocation for primary static address for each HAPEE LB instance
 resource "aws_eip" "hapee_node_eip1" {
   count             = 2
-  network_interface = "${element(aws_instance.hapee_node.*.network_interface_id, count.index)}"
+  network_interface = "${element(aws_instance.hapee_node.*.primary_network_interface_id, count.index)}"
   vpc               = true
 }

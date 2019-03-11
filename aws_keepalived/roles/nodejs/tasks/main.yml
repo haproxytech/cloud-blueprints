@@ -1,50 +1,50 @@
 - name: wait for automatic system updates
-  shell: while pgrep unattended; do sleep 5; done;
-  
+  shell: while pgrep -f '/usr/bin/unattended-upgrade$'; do sleep 5; done;
+
 - name: add NodeSource repo key
   apt_key: url=https://deb.nodesource.com/gpgkey/nodesource.gpg.key
 
 - name: add NodeSource repo
   apt_repository:
-    repo: 'deb https://deb.nodesource.com/node_10.x {{ ansible_distribution_release }} main' 
-    update_cache: yes
+      repo: "deb https://deb.nodesource.com/node_11.x {{ ansible_distribution_release }} main"
+      update_cache: yes
 
 - name: install NodeJS
   apt:
-    name: nodejs
-    state: latest
+      name: nodejs
+      state: latest
 
 - name: set required capabilities (bind on privileged ports)
   capabilities:
-    path: /usr/bin/node
-    capability: cap_net_bind_service+ep
-    state: present
+      path: /usr/bin/node
+      capability: cap_net_bind_service+ep
+      state: present
 
 - name: create default web directory
   file:
-    path: /var/www
-    state: directory
-    owner: root
-    group: www-data
-    mode: 0750
+      path: /var/www
+      state: directory
+      owner: root
+      group: www-data
+      mode: 0750
 
 - name: copy index.js
   copy:
-    src: index.js
-    dest: /var/www/index.js
-    owner: root
-    group: root
+      src: index.js
+      dest: /var/www/index.js
+      owner: root
+      group: root
 
 - name: copy NodeJS Systemd unit file
   copy:
-    src: nodejs.service
-    dest: /lib/systemd/system/nodejs.service
-    owner: root
-    group: root
+      src: nodejs.service
+      dest: /lib/systemd/system/nodejs.service
+      owner: root
+      group: root
 
 - name: enable and restart NodeJS service
   systemd:
-    name: nodejs
-    daemon_reload: yes
-    state: started
-    enabled: yes
+      name: nodejs
+      daemon_reload: yes
+      state: started
+      enabled: yes

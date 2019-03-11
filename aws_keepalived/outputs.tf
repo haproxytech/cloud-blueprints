@@ -11,7 +11,7 @@ output "HAPEE node EIP1 (primary interface) public IPs" {
 }
 
 output "HAPEE node primary interface IDs" {
-  value = "${aws_instance.hapee_node.*.network_interface_id}"
+  value = "${aws_instance.hapee_node.*.primary_network_interface_id}"
 }
 
 output "Web node private IPs" {

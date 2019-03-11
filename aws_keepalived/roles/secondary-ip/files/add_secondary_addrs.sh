@@ -1,6 +1,6 @@
 #!/bin/bash
 
-MAC_ADDR=$(ifconfig eth0 | sed -n 's/.*HWaddr \([a-f0-9:]*\).*/\1/p')
+MAC_ADDR=$(ip addr show dev eth0 | sed -n 's/.*ether \([a-f0-9:]*\).*/\1/p')
 IP=($(curl "http://169.254.169.254/latest/meta-data/network/interfaces/macs/$MAC_ADDR/local-ipv4s" 2>/dev/null))
 
 for ip in ${IP[@]:1}; do

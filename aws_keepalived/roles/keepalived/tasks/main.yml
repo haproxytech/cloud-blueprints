@@ -1,50 +1,50 @@
 - name: wait for automatic system updates
-  shell: while pgrep unattended; do sleep 5; done;
+  shell: while pgrep -f '/usr/bin/unattended-upgrade$'; do sleep 5; done;
 
 - name: install AWS CLI
   apt:
-    pkg: awscli
-    state: present
+        pkg: awscli
+        state: present
 
 - name: remove Heartbeat
   apt:
-    pkg: heartbeat
-    state: absent
+        pkg: heartbeat
+        state: absent
 
 - name: install Keepalived service
   apt:
-    pkg: hapee-extras-vrrp
-    state: present
+        pkg: hapee-extras-vrrp
+        state: present
 
 - name: generate Keepalived configuration
   template:
-    src: hapee-vrrp.cfg.j2
-    dest: /etc/hapee-extras/hapee-vrrp.cfg
-    mode: 0644
+        src: hapee-vrrp.cfg.j2
+        dest: /etc/hapee-extras/hapee-vrrp.cfg
+        mode: 0644
 
 - name: install ping-check script
   copy:
-    src: ping-vrrp-check.sh
-    dest: /usr/local/sbin/ping-vrrp-check.sh
-    owner: root
-    group: root
-    mode: 0755
+        src: ping-vrrp-check.sh
+        dest: /usr/local/sbin/ping-vrrp-check.sh
+        owner: root
+        group: root
+        mode: 0755
 
 - name: generate master EIP1 script
   template:
-    src: update-EIP1.sh.j2
-    dest: /usr/local/sbin/update-EIP1.sh
-    mode: 0755
+        src: update-EIP1.sh.j2
+        dest: /usr/local/sbin/update-EIP1.sh
+        mode: 0755
 
 - name: generate master EIP2 script
   template:
-    src: update-EIP2.sh.j2
-    dest: /usr/local/sbin/update-EIP2.sh
-    mode: 0755
+        src: update-EIP2.sh.j2
+        dest: /usr/local/sbin/update-EIP2.sh
+        mode: 0755
 
 - name: enable and restart Keepalived service
   systemd:
-    name: hapee-extras-vrrp
-    daemon_reload: yes
-    state: started
-    enabled: yes
+        name: hapee-extras-vrrp
+        daemon_reload: yes
+        state: started
+        enabled: yes
