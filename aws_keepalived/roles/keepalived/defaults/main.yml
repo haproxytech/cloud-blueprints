@@ -9,14 +9,14 @@ self_gateway: "{{ ansible_default_ipv4.gateway }}"
 
 # EIP1 block
 keepalived_interface1: "eth0"
-keepalived_role1: "{% if ansible_host == first_eip %}master{% else %}slave{% endif %}"
+keepalived_role1: "{% if ansible_host == first_eip %}master{% else %}backup{% endif %}"
 keepalived_router_id1: "51"
 keepalived_priority1: "{% if keepalived_role1 == 'master' %}101{% else %}100{% endif %}"
 keepalived_password1: "{{ lookup('password', '/tmp/keepalived_password1 chars=ascii_letters length=15') }}"
 
 # EIP2 block
 keepalived_interface2: "eth0"
-keepalived_role2: "{% if ansible_host == second_eip %}master{% else %}slave{% endif %}"
+keepalived_role2: "{% if ansible_host == second_eip %}master{% else %}backup{% endif %}"
 keepalived_router_id2: "50"
 keepalived_priority2: "{% if keepalived_role2 == 'master' %}101{% else %}100{% endif %}"
 keepalived_password2: "{{ lookup('password', '/tmp/keepalived_password2 chars=ascii_letters length=15') }}"
