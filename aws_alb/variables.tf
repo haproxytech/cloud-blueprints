@@ -10,12 +10,12 @@ variable "aws_az_count" {
 
 variable "aws_hapee_instance_type" {
   description = "Default AWS instance type for HAPEE nodes"
-  default     = "t2.small"
+  default     = "t3.small"
 }
 
 variable "aws_web_instance_type" {
   description = "Default AWS instance type for Web nodes"
-  default     = "t2.small"
+  default     = "t3.small"
 }
 
 variable "key_name" {

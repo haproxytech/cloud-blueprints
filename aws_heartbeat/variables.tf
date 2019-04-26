@@ -7,13 +7,13 @@ variable "aws_region" {
 // Default instance type for HAPEE LB instances. Obviously, something along m5.xlarge or c5.xlarge should be a perfect fit.
 variable "aws_hapee_instance_type" {
   description = "Default AWS instance type for HAPEE nodes"
-  default     = "t2.small"
+  default     = "t3.small"
 }
 
 // Default instance type for Web backends. Typically m5.4xlarge and similar, depending on use case.
 variable "aws_web_instance_type" {
   description = "Default AWS instance type for Web nodes"
-  default     = "t2.small"
+  default     = "t3.small"
 }
 
 // SSH pub key pair located on Amazon. Also set/used in ansible.cfg.

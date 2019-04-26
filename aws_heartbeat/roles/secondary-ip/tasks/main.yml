@@ -12,14 +12,14 @@
 
 - name: gather HAPEE EC2 ENI details
   ec2_eni_facts:
-    region: "{{ region | default('us-east-1') }}"
+    region: "{{ ec2_region | default('us-east-1') }}"
     filters:
       attachment.instance-id: "{{ ec2_id }}"
   register: aws_ec2_eni_facts
 
 - name: add secondary IP address
   ec2_eni:
-    region: "{{ region | default('us-east-1') }}"
+    region: "{{ ec2_region | default('us-east-1') }}"
     eni_id: "{{ aws_ec2_eni_facts['network_interfaces'][0]['id'] }}"
     subnet_id: "{{ aws_ec2_eni_facts['network_interfaces'][0]['subnet_id'] }}"
     state: present
