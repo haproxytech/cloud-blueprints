@@ -1,0 +1,24 @@
+{
+    "requiresCompatibilities": [
+        "EC2"
+    ],
+    "containerDefinitions": [
+        {
+            "name": "hapee-business",
+            "image": "015915003385.dkr.us-east-1.amazonaws.com/6c110e8e-1500-468c-b6d8-fd4b937a3b49/cg-2752204292/hapee-business/scan:product-version_latest",
+            "memory": 2048,
+            "cpu": 512,
+            "essential": true,
+            "portMappings": [
+                {
+                    "containerPort": 80,
+                    "protocol": "tcp"
+                }
+            ]
+        }
+    ],
+    "volumes": [],
+    "networkMode": "bridge",
+    "placementConstraints": [],
+    "family": "hapee"
+}
