@@ -11,17 +11,18 @@ provider "aws" {
 data "aws_ami" "hapee_aws_amis" {
   most_recent = true
 
-  filter {
-    name   = "product-code"
-    values = ["483gxnuft87jy44d3q8n4kvt1"]
-  }
+//  filter {
+//    name   = "product-code"
+//    values = ["483gxnuft87jy44d3q8n4kvt1"]
+//  }
 
   filter {
     name   = "name"
     values = ["hapee-ubuntu-xenial-amd64-hvm-1.8*"]
   }
 
-  owners = ["aws-marketplace"]
+  # Source: 123832860963/hapee-ubuntu-xenial-amd64-hvm-1.8r1-20180516
+  owners = ["123832860963"]
 }
 
 // Lookup latest Ubuntu Xenial 16.04 AMI
