@@ -25,7 +25,7 @@ variable "aws_web_instance_type" {
 variable "key_name" {
   description = "SSH key pair to use in AWS"
   type        = string
-  default      = "hapee-test"
+  default     = "hapee-test"
 }
 
 variable "hapee_cluster_size" {

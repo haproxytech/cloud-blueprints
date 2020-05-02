@@ -11,10 +11,10 @@ provider "aws" {
 data "aws_ami" "hapee_aws_amis" {
   most_recent = true
 
-//  filter {
-//    name   = "product-code"
-//    values = ["483gxnuft87jy44d3q8n4kvt1"]
-//  }
+  //  filter {
+  //    name   = "product-code"
+  //    values = ["483gxnuft87jy44d3q8n4kvt1"]
+  //  }
 
   filter {
     name   = "name"
